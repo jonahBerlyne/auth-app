@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { signUp, logIn, useAuth, logOut } from "./firebase";
+import Profile from "./Profile";
 
 export default function App() {
 
@@ -44,16 +45,26 @@ export default function App() {
 
       <div>Currently logged in as: {currentUser?.email}</div>
 
-      <div className="field">
-        <input ref={emailRef} type="email" placeholder="email"/>
-        <input ref={passwordRef} type="password" placeholder="password"/>
-      </div>
+      {!currentUser && 
+        <>
+          <div className="field">
+            <input ref={emailRef} type="email" placeholder="email" required/>
+            <input ref={passwordRef} type="password" placeholder="password" required/>
+          </div>
+          <button disabled={ loading } onClick={handleSignUp}>Sign Up</button>
+          <button disabled={ loading } onClick={handleLogin}>Login</button>
+        </>
+      }
 
-      <button disabled={ loading || currentUser } onClick={handleSignUp}>Sign Up</button>
 
-      <button disabled={ loading || currentUser } onClick={handleLogin}>Login</button>
 
-      <button disabled={ loading || !currentUser } onClick={handleLogout}>Log Out</button>
+      {currentUser && 
+        <>
+          <Profile/>
+          <button disabled={ loading } onClick={handleLogout}>Log Out</button>
+        </>
+      }
+
     </div>
   );
 }
